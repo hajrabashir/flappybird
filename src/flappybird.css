@@ -1,9 +1,19 @@
 body{
     font-family: 'Times New Roman', Times, serif;
     text-align: center;
+    background-color: #70c5ce;
+    margin:0;
+
 }
+
 #board{
-   background-image: url(flappybirdbg.png);
+   background-image:url(flappybirdbg.png);
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center;
+   border: 2px solid black;
+   display: block;
+   margin: 0 auto;
 
     
 }
