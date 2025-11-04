@@ -4,11 +4,13 @@ body{
     background-color: #70c5ce;
     margin:0;
 
+    
+
 }
 
 #board{
-   background-image:url(flappybirdbg.png);
-   background-size: cover;
+  background-image:url(flappybirdbg.png);
+ background-size: cover;
    background-repeat: no-repeat;
    background-position: center;
    border: 2px solid black;
