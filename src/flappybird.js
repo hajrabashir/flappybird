@@ -6,24 +6,14 @@ let context;
 let birdWidth = 34;
 let birdHeight = 24;
 let birdX = boardWidth / 8;
-let birdY = boardHeight / 2 ;
+let birdY = boardHeight / 2;
 let birdImg;
 
-let pipeWidth = 64;
-let pipeHeight = 512;
-let pipes = [];
-let topPipeImg;
-let bottompipeImg;
-let gap = 150;
-
 let velocityY = 0;
-let gravity = 0.4;
-let jumpower = -6;
-let pipeSpeed = -2;
+let gravity = 0.1;
+let jumpower = -3;
 
-let frame = 0;
-//yyyyy
-
+let gameState = "RUNNING";
 
 window.onload = function () {
   board = document.getElementById("board");
@@ -33,86 +23,51 @@ window.onload = function () {
 
   birdImg = new Image();
   birdImg.src = "./flappybird.png";
-  topPipeImg = new Image();
-  topPipeImg.src = "./toppipe.png";
-  bottompipeImg = new Image();
-  bottompipeImg.src = "./bottompipe.png";
   birdImg.onload = function () {
-    requestAnimationFrame(update);
+    context.drawImage(birdImg, birdX, birdY, birdWidth, birdHeight);
   };
-
-document.addEventListener("keyword", moveBird);
-document.addEventListener("click", () =>
-{
-  velocityY = jumpower;
-});
-    
-  };
-  function update() {
   requestAnimationFrame(update);
-  context.clearRect(0,0, board.width,board.height);
 
-  velocityY += gravity;
-  birdY += velocityY;
-  if (birdY + birdHeight > boardHeight)
-     {
-    birdY = boardHeight - birdHeight;
-    velocityY = 0;
-  }
+  document.addEventListener("keydown", moveBird);
+  document.addEventListener("click", moveBird);
+  document.addEventListener("keydown", restartGame);
+};
 
-  if(birdY < 0) {
-    birdY = 0;
-    velocityY = 0;
+function update() {
+  requestAnimationFrame(update);
+  context.clearRect(0, 0, board.width, board.height);
+  if (gameState === "RUNNING") {
+    velocityY += gravity;
+    birdY += velocityY;
+    if (birdY + birdHeight > boardHeight) {
+      birdY = boardHeight - birdHeight;
+      velocityY = gravity
+      gameState = "GAME_OVER";
+    }
+    if (birdY < 0) {
+      birdY = 0;
+      velocityY = gravity
+      gameState = "GAME_OVER";
+    }
+    context.drawImage(birdImg, birdX, birdY, birdWidth, birdHeight);
+  } else if (gameState === "GAME_OVER") {
+    context.fillStyle = "red";
+    context.font = "bold 32px Arial";
+    context.fillText("GAME OVER", 80, 250);
+    context.fillStyle = "White";
+    context.font = "16px Arial";
+    context.fillText("press R to Restart", 110, 280);
   }
-  frame++;
-  if(frame % 100 === 0) {
-  let randomY = -pipeHeight / 4 -
-  Math.random() * (pipeHeight / 2);
-  
-  pipes.push ({
-    
-    x: boardWidth,
-    y: randomY,
-  });
 }
-  for (let i = 0; i < pipes.length; i++)
-  {
-    let pipe = pipes[i];
-    pipe.x += pipeSpeed;
-    context.drawImage(topPipeImg,pipe.x,pipe.y,pipeWidth,pipeHeight);
-    context.drawImage(bottompipeImg,pipe.x,pipe.y+pipeHeight+gap,pipeWidth,pipeHeight);
-    context.drawImage(birdImg,birdX,birdY,birdWidth,birdHeight);
-  }
-if (pipes.length > 0 && pipes[0].x < -pipeWidth) {
-  pipes.shift();
-}
-
-
-
-  pipes.push ({
-    img: bottompipeImg,
-    x: boardWidth,
-    y: toppipeY + pipeHeight + gap, 
-    width:pipeWidth,
-    height:pipeHeight
-  });
-
-  
-
-  
-   
-    
-    
-  
-  }
 function moveBird(e) {
-
-if (e.code=="space" ) {
-
- velocityY = jumpower;
+  if (gameState === "RUNNING" && (e.code === "Space" || e.type === "Click")) {
+    velocityY = jumpower;
+  }
 }
+function restartGame(e) {
+  if (gameState === "GAME_OVER" && e.code === "KeyR") {
+    birdY = boardHeight / 2;
+    velocity = 0;
+    gameState = "RUNNING";
+  }
 }
-
-
-
-
